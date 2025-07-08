@@ -25,6 +25,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/my-compose-app  # change as needed
+            cd ~/docker-image
+            docker stop umair-container || true
+            docker rm umair-container || true
             docker build -t umair-image:latest .
             docker run -d --name umair-container umair-image:latest
