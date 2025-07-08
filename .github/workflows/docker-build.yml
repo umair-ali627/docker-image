@@ -1,11 +1,11 @@
-name: Build Docker Image
+name: Build and Deploy
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,3 +17,14 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t umair-image:latest .
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/my-compose-app  # change as needed
+            docker build -t umair-image:latest .
+            docker run -d --name umair-container umair-image:latest
