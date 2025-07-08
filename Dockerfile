@@ -1,3 +1,6 @@
-# Dockerfile
-FROM alpine:latest
-CMD ["echo", "Docker image built successfully!"]
+FROM node:18
+WORKDIR /app
+COPY . .
+RUN npm install
+CMD ["npm", "start"]
+
